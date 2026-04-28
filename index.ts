@@ -1,9 +1,10 @@
 import { Hono } from "hono";
+import type { User } from "./src/model/atividades.ts";
 
 //Sei lá o q isso faz!
 const app = new Hono()
 
-let data: {id:Number}[] = []
+let data: User[] = []
 
 let id = 1
 
@@ -52,6 +53,22 @@ app.get("/usuario/:id{[0-9]+}", async c => {
     }
 
     return c.json({status:"Não encontrado"}, 404)
+})
+
+app.delete("/usuario/:id{[0-9]+}", async c => {
+    let pid:any = c.req.param("id")
+    pid = Number(pid)
+
+    const index = data.findIndex((v) => {
+        return v.id  = pid
+    })
+
+    if (index === -1)
+        return c.json({status:"Não encontrado"}, 404)
+
+    data.splice(index, 1)
+
+    return c.json({status:"deletado"}, 200)
 })
 
 //Manda para o mundo...
